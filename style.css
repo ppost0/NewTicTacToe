@@ -1,0 +1,86 @@
+.root {
+  --cell-size: 100px;
+  --mark-size: cal(var(var(--cell-size) * 0.9))
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  grid-template-rows: repeat(3, auto);
+  justify-content: center;
+  align-content: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+.cell {
+  border: 1px solid black;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cell:not(.X):not(.O) {
+  cursor: pointer;
+}
+
+.cell:not(.empty) {
+  cursor: not-allowed;
+}
+
+.cell:first-child,
+.cell:nth-child(2),
+.cell:nth-child(3) {
+  border-top: none;
+}
+
+.cell:nth-child(3n+1) {
+  border-left: none;
+}
+
+.cell:nth-child(3n+3) {
+  border-right: none;
+}
+
+.cell:last-child,
+.cell:nth-child(8),
+.cell:nth-child(7) {
+  border-bottom: none;
+}
+
+.winning-screen {
+  display: none;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+.winning-screen.show {
+  display: flex;
+}
+
+.winning-screen div {
+  font-size: 5rem;
+  color: white;
+}
+
+.winning-screen button {
+  font-size: 2rem;
+  border-radius: 20px;
+  padding: 10px 20px;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+.winning-screen button:hover {
+  background-color: black;
+  color: white;
+  border: 1px solid white;
+}
