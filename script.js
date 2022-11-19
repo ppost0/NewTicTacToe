@@ -23,7 +23,7 @@ const gameBoardModule = (function() {
 
   //bind events
   cells.forEach((cell) => {
-    cell.addEventListener('click', placeMark);
+    cell.addEventListener('click', handleClick);
   })
 
 
@@ -41,7 +41,7 @@ const gameBoardModule = (function() {
     })
   }
 
-  function placeMark(event) {
+  function handleClick(event) {
     let cell = event.target;
     let mark;
 
@@ -59,7 +59,13 @@ const gameBoardModule = (function() {
 
     if (checkWin(mark)) {
       console.log('win');
+      endGame();
     };
+
+    if (checkDraw()) {
+      console.log('draw');
+      endGame();
+    }
 
     swapTurns();
   }
@@ -68,6 +74,7 @@ const gameBoardModule = (function() {
   function swapTurns() {
     circleTurn = !circleTurn;
   }
+
 
   function checkWin(mark) {
     return WINNING_COMBINATIONS.some((combo) => {
@@ -78,11 +85,15 @@ const gameBoardModule = (function() {
   };
 
 
-
-
   function checkDraw() {
-
+    return (!checkWin() && [...cells].every(cell => {
+      return (cell.classList.contains('X') || cell.classList.contains('O'))}))
   };
+
+
+  function endGame() {
+
+  }
 
 })()
 
