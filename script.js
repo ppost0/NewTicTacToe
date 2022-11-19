@@ -3,12 +3,16 @@
 const gameBoardModule = (function() {
 
   //cache DOM
+  let cells = document.querySelectorAll('[data-cell]');
+  let winScreen = document.getElementById('winningScreen');
+  let winScreenMessage = document.querySelector('[data-winning-screen-text]');
+  let restartButton = document.getElementById('restartButton');
+
   let boardArray = new Array(9);
   boardArray.fill('');
   let boardArrayPlaceholder = ['X', 'O', 'O', 'X', 'X', 'X', 'O', 'X', 'O'];
-  let cells = document.querySelectorAll('[data-cell]');
   let circleTurn = false;
-
+  let currentMark;
   let WINNING_COMBINATIONS = [
     [0, 1, 2],
     [3, 4, 5],
@@ -22,8 +26,9 @@ const gameBoardModule = (function() {
 
 
   //bind events
+  restartButton.addEventListener('click', restartGame);
   cells.forEach((cell) => {
-    cell.addEventListener('click', handleClick);
+    cell.addEventListener('click', handleClick, {once: true});
   })
 
 
@@ -43,31 +48,24 @@ const gameBoardModule = (function() {
 
   function handleClick(event) {
     let cell = event.target;
-    let mark;
+    circleTurn ? currentMark = 'O' : currentMark = 'X';
+    cell.innerText = currentMark;
+    cell.classList.add(currentMark);
+    cell.classList.remove('empty');
 
-    if (!circleTurn) {
-      mark = 'X';
-    } else {
-      mark = 'O';
-    }
 
-    if (cell.classList.contains('empty')) {
-      cell.innerText = mark;
-      cell.classList.add(mark);
-      cell.classList.remove('empty');
-    }
-
-    if (checkWin(mark)) {
+    if (checkWin(currentMark)) {
+      winScreenMessage.innerText = `${currentMark} Wins!`
       console.log('win');
       endGame();
-    };
-
-    if (checkDraw()) {
+    } else if (checkDraw()) {
+      winScreenMessage.innerText = `It's a draw!`;
       console.log('draw');
       endGame();
+    } else {
+      swapTurns();
     }
 
-    swapTurns();
   }
 
 
@@ -92,7 +90,21 @@ const gameBoardModule = (function() {
 
 
   function endGame() {
+    winScreen.classList.add('show');
+  }
 
+
+  function restartGame() {
+    winScreen.classList.remove('show');
+    cells.forEach((cell) => {
+      cell.innerText = '';
+      cell.classList.remove('X');
+      cell.classList.remove('O');
+      cell.classList.add('empty');
+      circleTurn = false;
+      cell.removeEventListener('click', handleClick);
+      cell.addEventListener('click', handleClick, {once:true})
+    })
   }
 
 })()
@@ -123,12 +135,14 @@ const createPlayer = (name, mark) => {
 
 // TO DO:
 
+// startGame() function ?
+// input for player names/ mark
+// AI to play against
 
-// Think carefully about where each bit of logic should reside. Each little piece of functionality should be able to fit in the game, player or gameboard objects.. but take care to put them in “logical” places. Spending a little time brainstorming here can make your life much easier later!
 
-// Build the logic that checks for when the game is over! Should check for 3-in-a-row and a tie.
 
-// Clean up the interface to allow players to put in their names, include a button to start/restart the game and add a display element that congratulates the winning player!
+
+// Clean up the interface to allow players to put in their names, include a button to start/ the game
 
 
 
